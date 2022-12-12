@@ -139,9 +139,11 @@ and you'll get the list, i.e.:
 # SIM step
 
 From EXO-MCsampleProductions
+```
 cd  FullSimulation/RunIISummer20UL18/SIM__CMSSW_10_6_17_patch1/src/
 source /cvmfs/cms.cern.ch/crab3/crab.csh
 voms-proxy-init -voms cms
+```
 
 Create a csv list of GEN datasets indicating the name of the output dataset in the first position and the input dataset name in the second position, separate by a ",".
 
@@ -273,4 +275,26 @@ and you'll get the list, i.e.:
 ```
 
 # NanoAODv9 with PPS info
+
+From EXO-MCsampleProductions:
+```
+cd FullSimulation/RunIISummer20UL18/NanoAODv2__CMSSW_10_6_27/src/
+cmsenv
+mv skeleton/ ../
+mv config_NanoAODv2.py ../
+git cms-addpkg PhysicsTools/NanoAOD
+mv ../skeleton/ .
+mv ../config_NanoAODv2.py  .
+```
+
+Copy modified files and compile:
+```
+cp ../../../../LQProd/genparticles_cff.py PhysicsTools/NanoAOD/python/
+cp ../../../../LQProd/common_cff.py  PhysicsTools/NanoAOD/python/
+cp ../../../../LQProd/nano_cff.py PhysicsTools/NanoAOD/python/
+scram b
+```
+(compiling takes some minutes)
+
+Then follow instructions as for SIM part to produce the NanoAOD datasets and publish them.
 
