@@ -137,3 +137,140 @@ and you'll get the list, i.e.:
 ```
 
 # SIM step
+
+From EXO-MCsampleProductions
+cd  FullSimulation/RunIISummer20UL18/SIM__CMSSW_10_6_17_patch1/src/
+source /cvmfs/cms.cern.ch/crab3/crab.csh
+voms-proxy-init -voms cms
+
+Create a csv list of GEN datasets indicating the name of the output dataset in the first position and the input dataset name in the second position, separate by a ",".
+
+Example:
+```
+list_SIM_publish.csv 
+umu_LQ_umu_M700_Lambda1p0_2018_POWHEG_Herwig7_v2_SIM,/umu_LQ_umu_M700_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M700_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN-ea546314c142f997f28c3868a5d30f0b/USER
+umu_LQ_umu_M1000_Lambda1p0_2018_POWHEG_Herwig7_v2_SIM,/umu_LQ_umu_M1000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M1000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN-35f9ffa266f026863f894e10651a0d02/USER
+umu_LQ_umu_M2000_Lambda1p0_2018_POWHEG_Herwig7_v2_SIM,/umu_LQ_umu_M2000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M2000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN-17918999a0db358f128e81b2894a82c2/USER
+umu_LQ_umu_M3000_Lambda1p0_2018_POWHEG_Herwig7_v2_SIM,/umu_LQ_umu_M3000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M3000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN-83c28d819a6bc2070f2a59c788d94d20/USER
+umu_LQ_umu_M4000_Lambda1p0_2018_POWHEG_Herwig7_v2_SIM,/umu_LQ_umu_M4000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M4000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN-548e066aee101d8e548612b3094f690f/USER
+umu_LQ_umu_M5000_Lambda1p0_2018_POWHEG_Herwig7_v2_SIM,/umu_LQ_umu_M5000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M5000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN-99e593f673f8e0e893ad3902f8d59617/USER
+```
+
+Edit config_SIM.py, comment out these two lines:
+```
+  #if checkDASInput.checkDASInput(inputdataset,step,campaign):                                                                                                                        
+  #  sys.exit() 
+``` 
+
+```
+python config_SIM.py list_SIM_publish.csv
+```
+
+Setup CRAB in bash:
+```
+bash
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init -voms cms
+```
+
+Submit jobs:
+```
+source submit_crab_list_SIM_publish.sh
+```
+
+When the job are finished get from DAS the list of the datasets:
+```
+/umu_LQ_umu_M700_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_SIM-128efeffab8ceb577467d0e58be013b1/USER
+/umu_LQ_umu_M1000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_SIM-128efeffab8ceb577467d0e58be013b1/USER
+/umu_LQ_umu_M2000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_SIM-128efeffab8ceb577467d0e58be013b1/USER
+/umu_LQ_umu_M3000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_SIM-128efeffab8ceb577467d0e58be013b1/USER
+/umu_LQ_umu_M4000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_SIM-128efeffab8ceb577467d0e58be013b1/USER
+/umu_LQ_umu_M5000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_SIM-128efeffab8ceb577467d0e58be013b1/USER
+```
+
+# DIGIPremix -> HLT -> RECO -> MiniAOD steps
+
+Repeat the same procedure described above for SIM for the following steps:
+DIGIPremix
+HLT
+RECO
+MiniAOD
+
+# Add PPS info to MiniAOD
+
+```
+cd EXO-MCsampleProductions/LQProd
+scram p -n CMSSW_10_6_28_PPS CMSSW CMSSW_10_6_28
+cd CMSSW_10_6_28_PPS/src
+cmsenv
+git cms-addpkg Validation/CTPPS
+cp ../../CTPPSDirectProtonSimulation.cc Validation/CTPPS/plugins
+cp ../../ctppsDirectProtonSimulation_cfi.py Validation/CTPPS/python
+scram b
+```
+
+PPS settings:
+```
+git clone https://github.com/jan-kaspar/proton_simulation_validation.git
+cd proton_simulation_validation/
+git checkout 9b2cff77711484e90c2323008eedc8c717cfcc41
+cd ../../
+```
+
+Choose the PPS configuration (from LQProd folder):
+```
+cp CMSSW_10_6_28_PPS/src/proton_simulation_validation/settings/MYSET/direct_simu_reco_cff.py .
+```
+where MYSET is one of these folders depending on the data taking period:
+```
+2016_postTS2 
+2016_preTS2  
+2017_postTS2 
+2017_preTS2
+```
+If you are running on 2018 data you should do (from LQProd folder):
+```
+cp direct_simu_reco_2018_cff.py direct_simu_reco_cff.py
+```
+
+Setup crab:
+```
+source /cvmfs/cms.cern.ch/crab3/crab.csh
+voms-proxy-init -voms cms
+```
+
+Create a list with MiniAOD datasets (example lists/list_MINIAOD_pps.csv):
+```
+umu_LQ_umu_M700_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS,/umu_LQ_umu_M700_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_MiniAOD-dd00e8e5190104a7aafdc4fba9805483/USER
+umu_LQ_umu_M1000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS,/umu_LQ_umu_M1000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_MiniAOD-dd00e8e5190104a7aafdc4fba9805483/USER
+umu_LQ_umu_M2000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS,/umu_LQ_umu_M2000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_MiniAOD-dd00e8e5190104a7aafdc4fba9805483/USER
+umu_LQ_umu_M3000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS,/umu_LQ_umu_M3000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_MiniAOD-dd00e8e5190104a7aafdc4fba9805483/USER
+umu_LQ_umu_M4000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS,/umu_LQ_umu_M4000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_MiniAOD-dd00e8e5190104a7aafdc4fba9805483/USER
+umu_LQ_umu_M5000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS,/umu_LQ_umu_M5000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-RunIISummer20UL18_MiniAOD-dd00e8e5190104a7aafdc4fba9805483/USER
+```
+
+Edit crab template if needed:
+```
+crab_miniaod_template.py
+```
+
+Submit the job to add PPS info in MINIAOD. From LQProd folder:
+```
+python submit_crab_miniaod.py -i lists/list_MINIAOD_pps.csv -o /afs/cern.ch/work/s/santanas/Workspace/CMS/privateMCProd/EXO-MCsampleProductions/LQProd/MINIAOD_2022_12_12_v1 -t crab_miniaod_template.py
+```
+
+Suggest to go directly on DAS and search for the output dataset string name in the "prod/phys03" dbs instance, i.e.:
+```
+dataset=/*umu_LQ_umu_M*v2*/*MiniAODv2PPS*/*
+```
+and you'll get the list, i.e.:
+```
+/umu_LQ_umu_M1000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M1000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS-967f344fa947ec8b3140605365abc0aa/USER
+/umu_LQ_umu_M2000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M2000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS-967f344fa947ec8b3140605365abc0aa/USER
+/umu_LQ_umu_M4000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M4000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS-967f344fa947ec8b3140605365abc0aa/USER
+/umu_LQ_umu_M5000_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M5000_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS-967f344fa947ec8b3140605365abc0aa/USER
+/umu_LQ_umu_M700_Lambda1p0_2018_POWHEG_Herwig7_v2_GEN/santanas-umu_LQ_umu_M700_Lambda1p0_2018_POWHEG_Herwig7_v2_MiniAODv2PPS-967f344fa947ec8b3140605365abc0aa/USER
+```
+
+# NanoAODv9 with PPS info
+
