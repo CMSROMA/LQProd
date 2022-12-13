@@ -18,10 +18,11 @@ RunIISummer20UL18       --conditions 106X_upgrade2018_realistic_v16_L1v1 --era R
 ```
 (Info about NanoAODv9 at https://gitlab.cern.ch/cms-nanoAOD/nanoaod-doc/-/wikis/Releases/NanoAODv9)
 
-Edit .dat files with the CMSSW release used for NanoAODv9:
+Edit .dat files with the CMSSW release used for NanoAODv9 and MiniAODv2:
 write   
 ```
-NanoAODv2       10_6_27  
+MiniAOD 10_6_20
+NanoAODv2 10_6_27  
 ```
 in all these .dat files:
 ```
@@ -30,7 +31,7 @@ packages/setups/Full/setup_RunIISummer20UL16APV.dat
 packages/setups/Full/setup_RunIISummer20UL17.dat 
 packages/setups/Full/setup_RunIISummer20UL18.dat
 ```
-(Note: keep the name "NanoAODv2" since I don't know if/where it is hardcoded)
+(Note: keep the name "MiniAOD" and "NanoAODv2" since I don't know if/where it is hardcoded in the rest of the scripts)
 
 Launch the setup
 ```
