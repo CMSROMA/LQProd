@@ -66,6 +66,26 @@ process.beamDivergenceVtxGenerator.srcGenParticle = cms.VInputTag(
 
 #process.ctppsDirectProtonSimulation.genParticlesInputTag=cms.InputTag("prunedGenParticles")
 
+# do not apply vertex smearing again 
+# same for all years
+process.ctppsBeamParametersESSource.vtxStddevX = 0
+process.ctppsBeamParametersESSource.vtxStddevY = 0
+process.ctppsBeamParametersESSource.vtxStddevZ = 0
+
+# undo CMS vertex shift (FIXME, choose the correct year for PPS simulation)
+#2016
+#process.ctppsBeamParametersESSource.vtxOffsetX45 =  -1.048 * 1E-1
+#process.ctppsBeamParametersESSource.vtxOffsetY45 =  -1.686 * 1E-1
+#process.ctppsBeamParametersESSource.vtxOffsetZ45 =  +10.04 * 1E-1
+#2017
+#process.ctppsBeamParametersESSource.vtxOffsetX45 =  +0.24793 * 1E-1
+#process.ctppsBeamParametersESSource.vtxOffsetY45 =  -0.692861 * 1E-1
+#process.ctppsBeamParametersESSource.vtxOffsetZ45 =  -7.89895 * 1E-1
+# 2018
+process.ctppsBeamParametersESSource.vtxOffsetX45 = -0.1078 * 1E-1
+process.ctppsBeamParametersESSource.vtxOffsetY45 = -0.4189 * 1E-1
+process.ctppsBeamParametersESSource.vtxOffsetZ45 = -0.2488 * 1E-1
+
 # processing path
 process.p = cms.Path(
   #process.generator *

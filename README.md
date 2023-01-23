@@ -236,6 +236,17 @@ If you are running on 2018 data you should do (from LQProd folder):
 cp direct_simu_reco_2018_cff.py direct_simu_reco_cff.py
 ```
 
+(From LQProd folder) Edit "AddPPSToMINIAOD.py", depending on the year of PPS simulation
+```
+# undo CMS vertex shift (FIXME, choose the correct year for PPS simulation)                                                                                                                                                            
+#2016                                                                                                                                                                                                                                 #process.ctppsBeamParametersESSource.vtxOffsetX45 =  -1.048 * 1E-1                                                                                                                                                                    #process.ctppsBeamParametersESSource.vtxOffsetY45 =  -1.686 * 1E-1                                                                                                                                                                    #process.ctppsBeamParametersESSource.vtxOffsetZ45 =  +10.04 * 1E-1                                                                                                                                                                     
+#2017                                                                                                                                                                                                                                 #process.ctppsBeamParametersESSource.vtxOffsetX45 =  +0.24793 * 1E-1                                                                                                                                                                  #process.ctppsBeamParametersESSource.vtxOffsetY45 =  -0.692861 * 1E-1                                                                                                                                                                 #process.ctppsBeamParametersESSource.vtxOffsetZ45 =  -7.89895 * 1E-1                                                                                                                                                                   
+# 2018                                                                                                                                                                                                                                process.ctppsBeamParametersESSource.vtxOffsetX45 = -0.1078 * 1E-1
+process.ctppsBeamParametersESSource.vtxOffsetY45 = -0.4189 * 1E-1
+process.ctppsBeamParametersESSource.vtxOffsetZ45 = -0.2488 * 1E-1
+```
+
+
 Setup crab:
 ```
 source /cvmfs/cms.cern.ch/crab3/crab.csh
